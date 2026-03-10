@@ -1,14 +1,18 @@
 package dev.fixfis.server;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.*;
+import java.util.List;
 
 public class ApiClient {
 
@@ -21,19 +25,22 @@ public class ApiClient {
             this.outputClass = outputClass;
             this.endpoint = endpoint;
         }
-
+        //metodo post
         public ApiCalls<T> postter(T body) {
             return request(body, "POST");
 
         }
+        //metodo put
         public ApiCalls<T> putter(T body) {
             return request(body, "PUT");
 
         }
+        //metodo delete
         public ApiCalls<T> deleter(T body) {
             return request(body, "DELETE");
 
         }
+        //metodo getter
         public <S> S getter(Class<S> sClass)  {
             if (postConn != null) return null;
             try {
@@ -58,6 +65,18 @@ public class ApiClient {
 
         }
 
+        //metodo convertir a lista
+        public <S> List<S> toList(Class<S> sClass)  {
+            JsonArray array = ApiClient
+                    .createFromScratch(endpoint)
+                    .getter(JsonArray.class);
+
+            Type type = TypeToken
+                    .getParameterized(List.class, sClass)
+                    .getType();
+
+            return new Gson().fromJson(array, type);
+        }
         private ApiCalls<T> request(T body, String method) {
             try {
                 String o = new Gson().toJson(body);
@@ -102,6 +121,7 @@ public class ApiClient {
         }
 
     }
+    //crear de una ip ajena
     public static <T> ApiCalls<T> createFromScratch(String endpoint, Class<T> clazz) {
         return new ApiCalls<>(
                 clazz,
@@ -112,10 +132,10 @@ public class ApiClient {
         return createFromScratch(endpoint,JsonObject.class);
     }
 
+    //crear apartit de la ip en Metrics
     public static <T> ApiCalls<T> create(String endpoint, Class<T> clazz) {
         return createFromScratch(Metrics.url+endpoint, clazz);
     }
-
     public static ApiCalls<JsonObject> create(String endpoint) {
         return createFromScratch(Metrics.url+endpoint);
     }

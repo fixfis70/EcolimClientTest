@@ -22,7 +22,45 @@ public class Main {
     static void main() {
         Metrics.userUUID = UUID.fromString("6f24e7c7-4e2a-41ce-8941-065c5c1e469f");
 
-        getLugares();
+        Object array = ApiClient.create("/tandas/getTableTanda",Long.class)
+                .postter(11L).result().getData();
+
+        Type type = TypeToken
+                .getParameterized(List.class, DesperdicioDto.class)
+                .getType();
+
+        List<DesperdicioDto> desperdicioDtoList = new Gson().fromJson(
+                array.toString(),type
+        );
+        desperdicioDtoList.forEach(System.out::println);
+    }
+
+    private static void getTAbla() {
+        Object array = ApiClient.create("/tandas/getTableTanda", Long.class)
+                .postter(4L).result().getData();
+
+        Type type = TypeToken
+                .getParameterized(List.class, DesperdicioDto.class)
+                .getType();
+
+        List<DesperdicioDto> desperdicioDtoList = new Gson().fromJson(
+                array.toString(), type
+        );
+        desperdicioDtoList.forEach(System.out::println);
+    }
+
+    private static void getTipoResiduo() {
+        List<UsuarioDto> list = ApiClient.create("/crerol/users").toList(UsuarioDto.class);
+        list.forEach(System.out::println);
+//        Type t = new TypeToken<List<TipoResiduoDto>>() {
+//        }.getType();
+//
+//        List<TipoResiduoDto> l = new Gson().fromJson(
+//                ApiClient.create("/residuos/residuos").getter(JsonArray.class),
+//                t
+//        );
+//        l.forEach(System.out::println);
+        // TODO agregar una forma para poder crear lugares desde este mismo panel
     }
 
     private static void getLugares() {
@@ -30,8 +68,8 @@ public class Main {
         }.getType();
 
         List<LugarDto> l = new Gson().fromJson(
-                        ApiClient.create("/lugares/").getter(JsonArray.class),
-                        t
+                ApiClient.create("/lugares/").getter(JsonArray.class),
+                t
         );
         l.forEach(System.out::println);
     }
@@ -92,8 +130,14 @@ public class Main {
 
     private static void crearTipoResiduos() {
         AdminRequierd<TipoResiduoDto> dto = new AdminRequierd<>();
-        dto.setData(new TipoResiduoDto(null,"Plásticos","Reciclable","(botellas, bolsas)","https://tse2.mm.bing.net/th/id/OIP.d-AOBmsh9ydLpQMK8GW0hAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"));
-        System.out.println(ApiClient.create("/residuos/tipos", AdminRequierd.class)
+        dto.setData(new TipoResiduoDto(
+                null,
+                "Latas de aluminio",
+                "Reciclable",
+                null,
+                null)
+        );
+        System.out.println(ApiClient.create("/residuos/residuos", AdminRequierd.class)
                 .postter(dto).devResult());
     }
 
@@ -125,14 +169,14 @@ public class Main {
         c.setData(
                 new UsuarioDto(
                         null,
-                        "Jose",
-                        "Cárcamo",
-                        "123124212",
+                        "jhon Edward",
+                        "Francia Minaya",
+                        "1111111",
                         true,
                         new CredencialDto(
                                 null,
-                                "joka213",
-                                "jokapro12"
+                                "jFrancia",
+                                "12345"
                         )
                 )
         );
