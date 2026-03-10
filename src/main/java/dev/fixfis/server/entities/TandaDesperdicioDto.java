@@ -1,4 +1,4 @@
-package dev.fixfis.entities;
+package dev.fixfis.server.entities;
 
 import java.io.Serializable;
 import java.util.Objects;

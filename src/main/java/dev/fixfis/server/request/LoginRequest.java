@@ -1,4 +1,4 @@
-package dev.fixfis.request;
+package dev.fixfis.server.request;
 
 public class LoginRequest {
     String username;

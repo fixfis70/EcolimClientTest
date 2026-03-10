@@ -1,6 +1,6 @@
-package dev.fixfis.request;
+package dev.fixfis.server.request;
 
-import dev.fixfis.Metrics;
+import dev.fixfis.server.Metrics;
 
 import java.util.UUID;
 

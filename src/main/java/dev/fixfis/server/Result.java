@@ -1,6 +1,4 @@
-package dev.fixfis;
-
-import com.google.gson.JsonElement;
+package dev.fixfis.server;
 
 public class Result {
     int error;

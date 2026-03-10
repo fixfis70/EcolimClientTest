@@ -1,19 +1,17 @@
-package dev.fixfis;
+package dev.fixfis.server;
 
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import dev.fixfis.entities.DesperdicioDto;
-import dev.fixfis.entities.LugarDto;
-import dev.fixfis.entities.TipoResiduoDto;
-import dev.fixfis.entities.security.CredencialDto;
-import dev.fixfis.entities.security.UsuarioDto;
-import dev.fixfis.request.AddDesperdicioTandaRequest;
-import dev.fixfis.request.AdminRequierd;
-import dev.fixfis.request.CrearUserRequest;
-import dev.fixfis.request.TandasRequest;
+import dev.fixfis.server.entities.DesperdicioDto;
+import dev.fixfis.server.entities.LugarDto;
+import dev.fixfis.server.entities.TipoResiduoDto;
+import dev.fixfis.server.entities.security.CredencialDto;
+import dev.fixfis.server.entities.security.UsuarioDto;
+import dev.fixfis.server.request.AddDesperdicioTandaRequest;
+import dev.fixfis.server.request.AdminRequierd;
+import dev.fixfis.server.request.TandasRequest;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -24,7 +22,42 @@ public class Main {
     static void main() {
         Metrics.userUUID = UUID.fromString("6f24e7c7-4e2a-41ce-8941-065c5c1e469f");
 
-        addDespercioTanda();
+        getLugares();
+    }
+
+    private static void getLugares() {
+        Type t = new TypeToken<List<LugarDto>>() {
+        }.getType();
+
+        List<LugarDto> l = new Gson().fromJson(
+                        ApiClient.create("/lugares/").getter(JsonArray.class),
+                        t
+        );
+        l.forEach(System.out::println);
+    }
+
+    private static void getUsers() {
+        Type type = new TypeToken<List<UsuarioDto>>() {
+        }.getType();
+
+        List<UsuarioDto> users = new Gson().fromJson(
+                ApiClient.create("/crerol/users").getter(JsonArray.class),
+                type
+        );
+        users.forEach(u -> System.out.println(u.getApellido()));
+    }
+
+    private static void crearTandaV2() {
+        LugarDto lugarDto = new LugarDto(
+                3L,
+                "BCP",
+                "calle benavides",
+                "al constado de un casino, cerca de la plaza de armas"
+        );
+        AdminRequierd<LugarDto> dto = new AdminRequierd<>();
+        dto.setData(lugarDto);
+        System.out.println(ApiClient.create("/tandas/crearTanda", AdminRequierd.class)
+                .postter(dto).devResult());
     }
 
     private static void addDespercioTanda() {
@@ -75,22 +108,16 @@ public class Main {
     private static void crearLugar() {
         AdminRequierd<LugarDto> dto = new AdminRequierd<>();
         dto.setData(
-                new LugarDto(null, "BBVA", "calle benavides", "al constado de un casino, cerca de la plaza de armas")
+                new LugarDto(
+                        null,
+                        "BBVA",
+                        "calle benavides",
+                        "al constado de un casino, cerca de la plaza de armas"
+                )
         );
 
         System.out.println(ApiClient.create("/lugares/", AdminRequierd.class)
                 .postter(dto).devResult());
-    }
-
-    private static void getUsers() {
-        Type type = new TypeToken<List<UsuarioDto>>() {
-        }.getType();
-
-        List<UsuarioDto> users = new Gson().fromJson(
-                ApiClient.create("/crerol/users").getter(JsonArray.class),
-                type
-        );
-        users.forEach(u -> System.out.println(u.getApellido()));
     }
 
     private static void createUser() {

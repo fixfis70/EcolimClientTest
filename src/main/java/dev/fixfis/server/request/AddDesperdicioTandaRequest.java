@@ -1,8 +1,8 @@
-package dev.fixfis.request;
+package dev.fixfis.server.request;
 
 
-import dev.fixfis.Metrics;
-import dev.fixfis.entities.DesperdicioDto;
+import dev.fixfis.server.Metrics;
+import dev.fixfis.server.entities.DesperdicioDto;
 
 import java.util.UUID;
 

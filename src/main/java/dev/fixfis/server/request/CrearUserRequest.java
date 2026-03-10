@@ -1,8 +1,8 @@
-package dev.fixfis.request;
+package dev.fixfis.server.request;
 
 
 
-import dev.fixfis.entities.security.UsuarioDto;
+import dev.fixfis.server.entities.security.UsuarioDto;
 
 import java.util.UUID;
 

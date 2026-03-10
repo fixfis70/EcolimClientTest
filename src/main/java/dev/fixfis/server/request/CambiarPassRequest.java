@@ -1,4 +1,4 @@
-package dev.fixfis.request;
+package dev.fixfis.server.request;
 
 import java.util.UUID;
 

@@ -1,11 +1,11 @@
-package dev.fixfis;
+package dev.fixfis.server;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.*;
@@ -43,8 +43,6 @@ public class ApiClient {
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.connect();
-
-                int responseCode = conn.getResponseCode();
 
                 return new Gson().fromJson(
                         gettingString(conn),
@@ -125,22 +123,30 @@ public class ApiClient {
 
     private static String gettingString(HttpURLConnection conn) {
         try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream())
-            );
+            int code = conn.getResponseCode();
+            InputStreamReader isr;
+            if (code >= 200 && code < 400) {
+                isr = new InputStreamReader(conn.getInputStream());
+            } else {
+                // leer error stream para ver mensaje del servidor
+                InputStream es = conn.getErrorStream();
+                if (es == null) {
+                    // a veces errorStream es null; devolver mensaje con code y url
+                    return "{\"error\":10,\"message\":\"http error: " + code + " " + conn.getURL() + "\"}";
+                }
+                isr = new InputStreamReader(es);
+            }
 
+            BufferedReader reader = new BufferedReader(isr);
             String line;
             StringBuilder response = new StringBuilder();
-
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }
-
             reader.close();
-
             return response.toString();
         } catch (Exception e) {
-            return "{\"error\": 10,\"message\": \""+e.getMessage()+"\"}";
+            return "{\"error\": 10,\"message\": \"" + e.getMessage() + "\"}";
         }
     }
 

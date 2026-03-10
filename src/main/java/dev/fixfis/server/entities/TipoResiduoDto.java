@@ -1,8 +1,7 @@
-package dev.fixfis.entities;
+package dev.fixfis.server.entities;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * DTO for {@link dev.fixfis.ecolim.entities.TipoResiduo}

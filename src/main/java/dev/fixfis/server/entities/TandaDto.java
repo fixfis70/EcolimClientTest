@@ -1,7 +1,7 @@
-package dev.fixfis.entities;
+package dev.fixfis.server.entities;
 
 
-import dev.fixfis.entities.security.UsuarioDto;
+import dev.fixfis.server.entities.security.UsuarioDto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

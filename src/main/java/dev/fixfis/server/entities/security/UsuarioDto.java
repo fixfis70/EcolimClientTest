@@ -1,4 +1,4 @@
-package dev.fixfis.entities.security;
+package dev.fixfis.server.entities.security;
 
 import java.io.Serializable;
 import java.util.Objects;
