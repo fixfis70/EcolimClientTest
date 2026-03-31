@@ -1,5 +1,7 @@
 package dev.fixfis.server.whatsapp;
 
+import java.net.http.HttpClient;
+
 public class WhatsappApi {
 
     static String apiUrl = "https://whatsapp.apisperu.com/api/v1";
@@ -14,6 +16,9 @@ public class WhatsappApi {
     static void refreshToken() {
         WhatsappApi.token = apiClient.<WhatsLogin>create("/auth/login").post(new WhatsLogin(user,password)).getJson().get("token").getAsString();
         System.out.println(apiClient.create("/app/reconnect").token(token).headers("device_id", device_id).getJson().toString());
+
+
+
     }
 
     static void sendText(SendMessage sendMessage) {
@@ -35,4 +40,6 @@ public class WhatsappApi {
         sendText(sendMessage);
 
     }
+
+
 }
